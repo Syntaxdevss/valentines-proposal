@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom right, #ff9a9e, #fad0c4);
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #e91e63;
+            margin-bottom: 30px;
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            font-size: 20px;
+            padding: 15px 30px;
+            margin: 0 15px;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        #yesBtn {
+            background-color: #4caf50;
+            color: white;
+        }
+        #noBtn {
+            background-color: #f44336;
+            color: white;
+            position: absolute;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #e91e63;
+            height: 1.5em;
+        }
+        .heart {
+            position: absolute;
+            font-size: 2em;
+            color: #e91e63;
+            animation: fall 3s linear infinite;
+        }
+        @keyframes fall {
+            0% { top: -10%; transform: translateX(0); }
+            100% { top: 100%; transform: translateX(calc(var(--random) * 200px)); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Will you be my Valentine?</h1>
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
+        <div id="message"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const message = document.getElementById('message');
+        let yesBtnSize = 100;
+        let noBtnMoves = 0;
+
+        const funnyMessages = [
+            "Nice try! 😏",
+            "Too slow! 🐌",
+            "Oops, missed it! 🙈",
+            "Almost got it! 😜",
+            "Keep trying! 💪",
+            "Not even close! 😂",
+            "You can do better! 🎯",
+            "Nope, not there! 🕵️",
+            "Getting warmer... or not! 🔥❄️",
+            "Maybe next time! ⏳"
+        ];
+
+        const noBtnTexts = [
+            "No", "Nope", "Nah", "No way", "Not a chance", "Negative", "Never", "Not really", "No thanks", "Pass"
+        ];
+
+        function moveNoBtn() {
+            const maxX = window.innerWidth - noBtn.offsetWidth;
+            const maxY = window.innerHeight - noBtn.offsetHeight;
+            const newX = Math.random() * maxX;
+            const newY = Math.random() * maxY;
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+            noBtnMoves++;
+            noBtn.textContent = noBtnTexts[noBtnMoves % noBtnTexts.length];
+            message.textContent = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+            yesBtnSize += 10;
+            yesBtn.style.fontSize = `${yesBtnSize}%`;
+        }
+
+        noBtn.addEventListener('mouseover', moveNoBtn);
+
+        yesBtn.addEventListener('click', () => {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+            message.textContent = "Yay! Happy Valentine's Day! ❤️";
+            noBtn.style.display = 'none';
+        });
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            heart.style.setProperty('--random', Math.random());
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        setInterval(createHeart, 300);
+    </script>
+</body>
+</html>

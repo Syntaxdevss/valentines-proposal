@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            transition: background 1s ease;
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #e91e63;
+            margin-bottom: 30px;
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            font-size: 20px;
+            padding: 15px 30px;
+            margin: 0 15px;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        #yesBtn {
+            background-color: #4caf50;
+            color: white;
+        }
+        #yesBtn:hover {
+            background-color: #388e3c;
+            transform: scale(1.1);
+        }
+        #noBtn {
+            background-color: #f44336;
+            color: white;
+        }
+        #noBtn:hover {
+            background-color: #d32f2f;
+            transform: scale(1.1);
+        }
+        .heart {
+            position: absolute;
+            font-size: 2em;
+            color: #e91e63;
+            animation: fall 3s linear infinite;
+        }
+        @keyframes fall {
+            0% { top: -10%; transform: translateX(0); }
+            100% { top: 100%; transform: translateX(calc(var(--random) * 200px)); }
+        }
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            animation: firework 2s ease-out infinite;
+        }
+        @keyframes firework {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)); opacity: 0; }
+        }
+        #celebrationPage {
+            display: none;
+        }
+        #celebrationPage .heart {
+            font-size: 10em;
+            position: static;
+            animation: beat 0.5s infinite alternate;
+        }
+        @keyframes beat {
+            to { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <div id="questionPage" class="container">
+        <h1>Will you be my Valentine?</h1>
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
+    </div>
+
+    <div id="celebrationPage" class="container">
+        <h1>You said YES!</h1>
+        <div class="heart">❤️</div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const questionPage = document.getElementById('questionPage');
+        const celebrationPage = document.getElementById('celebrationPage');
+        let noClickCount = 0;
+        let yesBtnSize = 100;
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            heart.style.setProperty('--random', Math.random());
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        function createFirework() {
+            const firework = document.createElement('div');
+            firework.classList.add('firework');
+            firework.style.left = Math.random() * window.innerWidth + 'px';
+            firework.style.top = Math.random() * window.innerHeight + 'px';
+            firework.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            firework.style.setProperty('--x', (Math.random() - 0.5) * 200 + 'px');
+            firework.style.setProperty('--y', (Math.random() - 0.5) * 200 + 'px');
+            document.body.appendChild(firework);
+            setTimeout(() => firework.remove(), 2000);
+        }
+
+        noBtn.addEventListener('click', () => {
+            noClickCount++;
+            if (noClickCount === 1) {
+                noBtn.textContent = 'Are you sure?';
+            } else if (noClickCount === 2) {
+                noBtn.textContent = 'Really?';
+            } else {
+                yesBtnSize += 50;
+                yesBtn.style.fontSize = `${yesBtnSize}%`;
+                yesBtn.style.padding = `${15 + noClickCount * 5}px ${30 + noClickCount * 10}px`;
+            }
+        });
+
+        yesBtn.addEventListener('click', () => {
+            questionPage.style.display = 'none';
+            celebrationPage.style.display = 'block';
+            document.body.style.background = 'linear-gradient(45deg, #ff9a9e, #fad0c4, #ffecd2)';
+            setInterval(createFirework, 100);
+        });
+
+        setInterval(createHeart, 500);
+    </script>
+</body>
+</html>
